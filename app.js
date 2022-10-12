@@ -4,6 +4,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
 const { default: mongoose } = require('mongoose');
 
@@ -14,6 +16,22 @@ mongoose.connect('mongodb://localhost:27017/finalProject')
     console.log(`connected to db ${connectObject.connections[0].name}`);
   })
   .catch(err => console.log(err));
+
+  app.use(
+    session({
+      secret: 'oof',
+      resave: true,
+      saveUninitialized: false,
+      cookie: {
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        maxAge: 600000 // 600 * 1000 ms === 10 min
+      },
+      store: MongoStore.create({
+        mongoUrl: 'mongodb://localhost:27017/finalProject',
+    })}
+    ))
 
 app.use(logger('dev'));
 app.use(express.json());

@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router();
 
-const createCourse = require('../models/createCourse.model');
+const createCourse = require('../models/Course.model');
 
 router.post('/createcourse', (req, res, next) => {
     const { courseName, holes, parForEachHole, courseImg } = req.body;
